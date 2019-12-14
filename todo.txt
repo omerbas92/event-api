@@ -1,0 +1,23 @@
+- Home
+- Search
+- Event Detail
+- Event Add
+
+- Home
+    - Events for you
+    - Collections
+    - Discover
+    - Upcoming
+
+- Explore
+    - Search by
+        - Name
+        - Tag
+        - Location
+        - Date
+        - Price
+
+- Event Detail
+    - Get Event By Id
+    - Event in this venue
+    - More like this
