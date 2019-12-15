@@ -17,6 +17,14 @@ exports.routesConfig = function (app) {
         ValidationMiddleware.validJWTNeeded,
         EventsController.list
     ]);
+    app.get('/events/search', [
+        ValidationMiddleware.validJWTNeeded,
+        EventsController.search
+    ]);
+    app.get('/events/upcoming', [
+        ValidationMiddleware.validJWTNeeded,
+        EventsController.upcomingEvents
+    ]);
     app.get('/events/:eventId', [
         ValidationMiddleware.validJWTNeeded,
         EventsController.getById

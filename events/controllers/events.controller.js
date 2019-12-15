@@ -17,11 +17,51 @@ exports.list = (req, res) => {
             page = Number.isInteger(req.query.page) ? req.query.page : 0;
         }
     }
-    EventModel.list(limit, page)
+    EventModel.list(limit, page, query)
         .then((result) => {
             res.status(200).send(result);
         })
 };
+
+exports.search = (req, res) => {
+    let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
+    let page = 0;
+    if (req.query) {
+        if (req.query.page) {
+            req.query.page = parseInt(req.query.page);
+            page = Number.isInteger(req.query.page) ? req.query.page : 0;
+        }
+    }
+    EventModel.search(limit, page, req.query)
+        .then((result) => {
+            res.status(200).send(result);
+        })
+};
+
+exports.upcomingEvents = (req, res) => {
+    let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
+    let page = 0;
+
+    req.query.startDate = new Date(Date.now()).addDays(-1);
+    req.query.endDate =  new Date().addDays(14);
+
+    if (req.query) {
+        if (req.query.page) {
+            req.query.page = parseInt(req.query.page);
+            page = Number.isInteger(req.query.page) ? req.query.page : 0;
+        }
+    }
+    EventModel.search(limit, page, req.query)
+        .then((result) => {
+            res.status(200).send(result);
+        })
+};
+
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
 
 exports.getById = (req, res) => {
     EventModel.findById(req.params.eventId)

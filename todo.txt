@@ -4,20 +4,20 @@
 - Event Add
 
 - Home
-    - Events for you
-    - Collections
+    - Events for you (search by keyword)
+    - Collections (test needed)
     - Discover
-    - Upcoming
+    - Upcoming (done)
 
 - Explore
     - Search by
-        - Name
-        - Tag
+        - Name (done)
+        - Tag (done)
         - Location
-        - Date
+        - Date (done)
         - Price
 
 - Event Detail
-    - Get Event By Id
+    - Get Event By Id (done)
     - Event in this venue
-    - More like this
+    - More like this (search by keyword)

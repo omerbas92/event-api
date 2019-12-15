@@ -8,10 +8,15 @@ const eventSchema = new Schema({
     startDate: Date,
     endDate: Date,
     isRepating: Boolean,
-    location: Array,
-    keywords: Array,
+    location: [{
+        longitute: Number,
+        latitude: Number
+    }],
+    keywords: [String],
     url: String,
-    price: Array,
+    price: {
+        type: Number
+    },
     createUserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     createDate: {
         type: Date,
@@ -81,6 +86,23 @@ exports.list = (perPage, page) => {
     });
 };
 
+exports.search = (perPage, page, query) => {
+    var queryBuilder = BuildQueryForSearch(query);
+
+    return new Promise((resolve, reject) => {
+        Event.find(queryBuilder)
+            .limit(perPage)
+            .skip(perPage * page)
+            .exec(function (err, events) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(events);
+                }
+            })
+    });
+};
+
 exports.patchEvent = (id, eventData) => {
     return new Promise((resolve, reject) => {
         Event.findById(id, function (err, event) {
@@ -107,4 +129,49 @@ exports.removeById = (eventId) => {
         });
     });
 };
+
+function BuildQueryForSearch(query){
+     // - Name
+    // - Tag
+    // - Location
+    // - Date
+    // - Price
+    var queryBuilder = {};
+
+    if(query.name){ 
+        queryBuilder["name"] = {$regex : new RegExp(query.name, "i")};
+    }
+
+    if(query.keyword){
+        queryBuilder["keywords"] = {$regex : new RegExp(query.keyword, "i")};
+    }
+
+    // if(query.location != ""){
+    //     queryBuilder["location"] = {$regex : new RegExp(query.location, "i")};
+    // }
+
+    var dateQuery;
+
+    if(query.startDate && query.endDate){
+        dateQuery = {$gte : new Date(query.startDate), $lt : new Date(query.endDate)};
+    } else {
+        if(query.startDate){
+            dateQuery = {$gte : new Date(query.startDate)};
+        }
+    
+        if(query.endDate){
+           dateQuery = {$lt : new Date(query.endDate)};
+        }
+    }
+
+    if(dateQuery){
+        queryBuilder["startDate"] = dateQuery;
+    }
+
+    // if(query.price != ""){
+    //     queryBuilder["name"] = {$regex : new RegExp(query.name, "i")};
+    // }
+
+    return queryBuilder;
+}
 
